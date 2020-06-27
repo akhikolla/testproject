@@ -15,8 +15,14 @@ deepstate_ci_setup<-function(path){
     
     write(write_to_travis,travis_path,append=TRUE)
   }
+  travis_lines <- readLines(travis_path)
   travis.checklist <- nc::capture_all_str(travis_path,
                                           "r_packages:",
                                           r_packages="(?:\n\t.*)*")
-  
-}
+  if(grepl("RInside",travis.checklist$r_packages))
+    print("RInside present")
+  else{
+    travis_lines <- gsub("r_packages:","r_packages:\n\t- RInside",travis_lines)
+    cat(travis_lines, file=travis_path, sep="\n")
+  }
+  }

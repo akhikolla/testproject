@@ -39,6 +39,21 @@ test_that("check for harness files existence testSAN package", {
 })
 
 
+path <- system.file("testpkgs/testSAN", package = "testproject")
+dhc<-deep_harness_compile_run(path)
+logfiles<-list_log_files(path)
+test_that("check for log files existence testSAN package", {
+  expect_true(file.exists(logfiles[[1]]))
+  expect_identical(logfiles[[1]],system.file("testfiles/testSAN/read_out_of_bound_log",package = "testproject"))
+  expect_true(file.exists(logfiles[[2]]))
+  expect_identical(logfiles[[2]],system.file("testfiles/testSAN/use_after_deallocate_log",package = "testproject"))
+  expect_true(file.exists(logfiles[[3]]))
+  expect_identical(logfiles[[3]],system.file("testfiles/testSAN/use_after_free_log",package = "testproject"))
+  expect_true(file.exists(logfiles[[4]]))
+  expect_identical(logfiles[[4]],system.file("testfiles/testSAN/write_index_outofbound_log",package = "testproject"))
+  expect_true(file.exists(logfiles[[5]]))
+  expect_identical(logfiles[[5]],system.file("testfiles/testSAN/zero_sized_array_log",package = "testproject"))
+})
 log_path <- system.file("include/read_out_of_bound_log", package = "testproject")
 print(log_path)
 user.display <- user_error_display(log_path)
@@ -93,6 +108,41 @@ test_that("valgrind use after free check", {
 })
 
 
+bin_dir<- list_bin_directory(path)
+test_that("check for binary file directories existence testSAN package", {
+  expect_true(dir.exists(bin_dir[[1]]))
+  #expect_vector(file.exists(Sys.glob(file.path(bin_dir[[1]], "*.crash"))))
+  expect_true(all(file.exists(Sys.glob(file.path(bin_dir[[1]], "*.fail")))))
+  expect_identical(bin_dir[[1]],system.file("testfiles/testSAN/read_out_of_bound_output",package = "testproject"))
+  expect_true(dir.exists(bin_dir[[2]]))
+  #expect_vector(file.exists(Sys.glob(file.path(bin_dir[[2]], "*.crash"))))
+  expect_true(all(file.exists(Sys.glob(file.path(bin_dir[[2]], "*.fail")))))
+  expect_identical(bin_dir[[2]],system.file("testfiles/testSAN/use_after_deallocate_output",package = "testproject"))
+  expect_true(dir.exists(bin_dir[[3]]))
+  #expect_vector(file.exists(Sys.glob(file.path(bin_dir[[3]], "*.crash"))))
+  expect_true(all(file.exists(Sys.glob(file.path(bin_dir[[3]], "*.fail")))))
+  expect_identical(bin_dir[[3]],system.file("testfiles/testSAN/use_after_free_output",package = "testproject"))
+  expect_true(dir.exists(bin_dir[[4]]))
+  #expect_vector(file.exists(Sys.glob(file.path(bin_dir[[4]], "*.crash"))))
+  expect_true(all(file.exists(Sys.glob(file.path(bin_dir[[4]], "*.fail")))))
+  expect_identical(bin_dir[[4]],system.file("testfiles/testSAN/write_index_outofbound_output",package = "testproject"))
+  expect_true(dir.exists(bin_dir[[5]]))
+  #expect_vector(file.exists(Sys.glob(file.path(bin_dir[[5]], "*.crash"))))
+  expect_true(all(file.exists(Sys.glob(file.path(bin_dir[[5]], "*.fail")))))
+  expect_identical(bin_dir[[5]],system.file("testfiles/testSAN/zero_sized_array_output",package = "testproject"))
+  
+})
+
+path <- system.file("testpkgs/testSAN",package="testproject")
+print(path)
+list.args <- list_package_args(path)
+test_that("check for input files testSAN", {
+  expect_true(file.exists(list.args[[1]]))
+  expect_true(file.exists(list.args[[2]]))
+  expect_true(file.exists(list.args[[3]]))
+  expect_true(file.exists(list.args[[4]]))
+  expect_true(file.exists(list.args[[5]]))
+})
 
 path <- system.file("testpkgs/binsegRcpp", package = "testproject")
 res<-deepstate_pkg_create(path)
@@ -119,3 +169,23 @@ test_that("check for make files existence binsegRcpp package", {
 
 path <- system.file("testpkgs/binsegRcpp", package = "testproject")
 dhc<-deep_harness_compile_run(path)
+logfiles<-list_log_files(path)
+test_that("check for log files existence binsegRcpp package", {
+  expect_true(file.exists(logfiles[[1]]))
+  expect_identical(logfiles[[1]],system.file("testfiles/binsegRcpp/binseg_normal_log",package = "testproject"))
+  expect_true(file.exists(logfiles[[2]]))
+  expect_identical(logfiles[[2]],system.file("testfiles/binsegRcpp/binseg_normal_cost_log",package = "testproject"))
+})
+bin_dir<- list_bin_directory(path)
+test_that("check for binary file directories existence binsegRcpp package", {
+  expect_true(dir.exists(bin_dir[[1]]))
+  expect_true(all(file.exists(Sys.glob(file.path(bin_dir[[1]], "*.crash")))))
+  expect_true(all(file.exists(Sys.glob(file.path(bin_dir[[1]], "*.fail")))))
+  expect_identical(bin_dir[[1]],system.file("testfiles/binsegRcpp/binseg_normal_output",package = "testproject"))
+  expect_true(dir.exists(bin_dir[[2]]))
+  expect_true(all(file.exists(Sys.glob(file.path(bin_dir[[2]], "*.crash")))))
+  expect_true(all(file.exists(Sys.glob(file.path(bin_dir[[2]], "*.fail")))))
+  expect_identical(bin_dir[[2]],system.file("testfiles/binsegRcpp/binseg_normal_cost_output",package = "testproject"))
+  
+})
+
