@@ -25,7 +25,7 @@ user_error_display<-function(logfile){
     "\n",
     leaksum="(?:.*\n)*?",
     "==[0-9]+== ERROR SUMMARY:")
-  
+  print(error.dt)
   files.list<-nc::capture_all_str(logfile,"Command: ./",
                                   file.name=".*",
                                   "_DeepState_TestHarness --fuzz")
