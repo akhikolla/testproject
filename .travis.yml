@@ -12,9 +12,6 @@ r_packages:
   - devtools
   - roxygen2
 
-after_success:
-  - Rscript -e 'devtools::install();devtools::test()'
-  
 r_check_args: '--as-cran --use-valgrind'
 
 addons:

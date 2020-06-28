@@ -17,7 +17,7 @@ userLibrary: $(USERLIBST)
 	cp $(USERLIBST) $(USERDIR)$(R_ARCH)
 	rm $(USERLIBST)
 	rm $(OBJECTS)
-	rm $(OBJECTS_TEST)
+	
 	
 
 $(USERLIBST): $(OBJECTS)
