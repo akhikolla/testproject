@@ -22,6 +22,7 @@ deepstate_ci_setup<-function(path){
   r_packages <- nc::capture_all_str(travis_path,
                                           "r_packages:",
                                           list="(?:\n  .*)*")
+  
   apt_packages <- nc::capture_all_str(travis_path,
                                     "apt_packages:",
                                 list="(?:\n  .*)*")
@@ -49,6 +50,6 @@ deepstate_ci_setup<-function(path){
   else{
     travis_lines <- gsub("env:","env: 'VALGRIND_OPTS='--leak-check=full --track-origins=yes'",travis_lines)
   }
-  
+  travis_lines <- gsub("r_github_packages:","r_github_packages:\n  - akhikolla/RcppDeepState",travis_lines)
   cat(travis_lines, file=travis_path, sep="\n")
   }
