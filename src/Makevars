@@ -18,7 +18,6 @@ userLibrary: $(USERLIBST)
 	rm $(USERLIBST)
 	rm $(OBJECTS)
 	
-	
 
 $(USERLIBST): $(OBJECTS)
 	$(AR) qc $(USERLIBST) $^
