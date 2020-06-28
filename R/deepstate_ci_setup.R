@@ -3,21 +3,7 @@
 ##' @export
 deepstate_ci_setup<-function(path){
  travis_path<-file.path(path,".travis.yml")
- print(travis_path)
-  if(!file.exists(travis_path)){
-    print(".travis.yml doesn't exist in your project creating a new file !!!")
-    file.create(travis_path,recursive=TRUE)
-    write_to_travis <- ""
-    write_to_travis <-paste0(write_to_travis,"warnings_are_errors: false\nlanguage: r\nsudo: required\n\n")
-    write_to_travis<-paste0(write_to_travis,"r_packages:\n  - RInside\n  - devtools\n\nafter_success:\n  ")
-    write_to_travis<-paste0(write_to_travis,"- Rscript -e 'devtools::install();devtools::test()'\n\nr_check_args: '--as-cran --use-valgrind'\n")
-    #write_to_travis<-paste0(write_to_travis,"\naddons:\n  apt:\n\t\tpackages:\n\t\t\t- valgrind\n\nenv:\n\t-VALGRIND_OPTS='--leak-check=full --track-origins=yes'\n\n")
-    write_to_travis<-paste0(write_to_travis,"\napt_packages:\n  - valgrind\n\n")
-    write_to_travis<-paste0(write_to_travis,"env:\n  - VALGRIND_OPTS='--leak-check=full --track-origins=yes'")
-    write_to_travis<-paste0(write_to_travis,"script:\n  - |\n  - travis_wait 60 R CMD build .\n  - travis_wait 60 R CMD check testproject*tar.gz")
-    
-    write(write_to_travis,travis_path,append=TRUE)
-  }
+  if(file.exists(travis_path)){
   travis_lines <- readLines(travis_path)
   r_packages <- nc::capture_all_str(travis_path,
                                           "r_packages:",
@@ -48,8 +34,21 @@ deepstate_ci_setup<-function(path){
     print("environment for valgrind is set")
   }
   else{
-    travis_lines <- gsub("env:","env: 'VALGRIND_OPTS='--leak-check=full --track-origins=yes'",travis_lines)
+    travis_lines <- gsub("env:","env:\n  -'VALGRIND_OPTS='--leak-check=full --track-origins=yes'",travis_lines)
   }
   travis_lines <- gsub("r_github_packages:","r_github_packages:\n  - akhikolla/RcppDeepState",travis_lines)
   cat(travis_lines, file=travis_path, sep="\n")
   }
+ else{
+   print(".travis.yml doesn't exist in your project creating a new file !!!")
+   file.create(travis_path,recursive=TRUE)
+   write_to_travis <- ""
+   write_to_travis <-paste0(write_to_travis,"warnings_are_errors: false\nlanguage: r\nsudo: required\n\n")
+   write_to_travis<-paste0(write_to_travis,"r_packages:\n  - RInside\n  - devtools\n\nafter_success:\n  ")
+   write_to_travis<-paste0(write_to_travis,"- Rscript -e 'devtools::install();devtools::test()'")
+   write_to_travis<-paste0(write_to_travis,"\n\nr_check_args: '--as-cran --use-valgrind'\n")
+   write_to_travis<-paste0(write_to_travis,"\napt_packages:\n  - valgrind\n\n")
+   write_to_travis<-paste0(write_to_travis,"env:\n  - VALGRIND_OPTS='--leak-check=full --track-origins=yes'")
+   write(write_to_travis,travis_path,append=TRUE)
+ }
+}
